@@ -30,8 +30,22 @@ var Repository = {
     S.pipe([
       S.maybeToEither(`no client found`),
       S.map(Client.name),
-      S.either(e => `error : ${e}`)(result => `client name:${result}`) //this is the pattern matching paradoxically 
+      S.either(e => `error : ${e}`)(result => `client name:${result}`) //this is the pattern matching paradoxically
     ])(Repository.getById(id));
+
+  log(getClientNameById(1));
+  log(getClientNameById(2));
+}
+
+{
+  logger1.h1().log("Using pipe-point free");
+  //using pipe and totaly point free (removed the (id)=>...)
+  var getClientNameById = S.pipe([
+    Repository.getById,
+    S.maybeToEither(`no client found`),
+    S.map(Client.name),
+    S.either(e => `error : ${e}`)(result => `client name:${result}`) //this is the pattern matching paradoxically
+  ]);
 
   log(getClientNameById(1));
   log(getClientNameById(2));
